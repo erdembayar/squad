@@ -1,11 +1,12 @@
 {
   "name": "@bradygaster/squad-cli",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "Squad CLI — Command-line interface for the Squad multi-agent runtime",
   "type": "module",
   "bin": {
     "squad": "dist/cli-entry.js",
-    "squad-cli": "dist/cli-entry.js"
+    "squad-cli": "dist/cli-entry.js",
+    "squad-test": "dist/cli-entry.js"
   },
   "exports": {
     ".": {
@@ -148,6 +149,10 @@
       "types": "./dist/cli/commands/copilot.d.ts",
       "import": "./dist/cli/commands/copilot.js"
     },
+    "./commands/memory": {
+      "types": "./dist/cli/commands/memory.d.ts",
+      "import": "./dist/cli/commands/memory.js"
+    },
     "./commands/cost": {
       "types": "./dist/cli/commands/cost.d.ts",
       "import": "./dist/cli/commands/cost.js"
@@ -169,7 +174,8 @@
     "dist",
     "templates",
     "scripts",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "postinstall": "node scripts/patch-esm-imports.mjs && node scripts/patch-ink-rendering.mjs",
@@ -182,15 +188,15 @@
   },
   "dependencies": {
     "@bradygaster/squad-sdk": ">=0.9.0",
-    "ink": "^6.8.0",
-    "react": "^19.2.4",
-    "vscode-jsonrpc": "^8.2.1"
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "ink": "^7.0.6",
+    "react": "^19.2.7",
+    "vscode-jsonrpc": "^9.0.0"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
-    "@types/react": "^19.2.14",
-    "esbuild": "^0.25.0",
-    "typescript": "^5.7.0",
+    "@types/node": "^25.9.3",
+    "@types/react": "^19.2.17",
+    "typescript": "^6.0.3",
     "ink-testing-library": "^4.0.0"
   },
   "keywords": [

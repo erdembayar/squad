@@ -12,8 +12,8 @@ import { CopilotClient } from '@github/copilot-sdk';
 // Mock CopilotClient
 vi.mock('@github/copilot-sdk', () => {
   return {
-    CopilotClient: vi.fn().mockImplementation(() => {
-      return {
+    CopilotClient: vi.fn(function (this: object) {
+      Object.assign(this, {
         start: vi.fn().mockResolvedValue(undefined),
         stop: vi.fn().mockResolvedValue([]),
         forceStop: vi.fn().mockResolvedValue(undefined),
@@ -37,7 +37,7 @@ vi.mock('@github/copilot-sdk', () => {
         getAuthStatus: vi.fn().mockResolvedValue({ authenticated: true }),
         listModels: vi.fn().mockResolvedValue([]),
         on: vi.fn().mockReturnValue(() => {}),
-      };
+      });
     }),
   };
 });
@@ -284,6 +284,18 @@ describe('SquadClient — Auto-Reconnection', () => {
     instance.createSession.mockRejectedValue(new Error('ECONNREFUSED'));
 
     await expect(client.createSession()).rejects.toThrow('ECONNREFUSED');
+  });
+
+  it('should provide approve-once guidance for permission handler errors', async () => {
+    const client = new SquadClient({ autoReconnect: false });
+    await client.connect();
+
+    const MockedCopilotClient = CopilotClient as unknown as ReturnType<typeof vi.fn>;
+    const instance = MockedCopilotClient.mock.results[0].value;
+
+    instance.createSession.mockRejectedValue(new Error('onPermissionRequest is required'));
+
+    await expect(client.createSession()).rejects.toThrow('kind: "approve-once"');
   });
 
   it('should not auto-reconnect after manual disconnect', async () => {
